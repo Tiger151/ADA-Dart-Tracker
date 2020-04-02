@@ -1,29 +1,32 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture("x:/DartBoard/pen_repeat.m2t")
+#TOGGLE BETWEEN THE TEST VIDEO AND REAL CAMERA##########
+cap = cv2.VideoCapture("pen_repeat.m2t")
 #cap = cv2.VideoCapture(0)
+########################################################
+#Frames before and after per 2 frames
 ret, frame0 = cap.read()
 ret, frame1 = cap.read()
 #cap.set(cv2.CAP_PROP_FPS, 60)
-
-#FPS
+########################################################
+#FPS counter############################################
 fps = cap.get(cv2.CAP_PROP_FPS)
 fpsCounter = "FPS: %s" % (fps)
 print(fpsCounter)
+########################################################
 
-
-positionPast = (0,0)
-while cap.isOpened():
+positionPast = (0,0)#Init variable
+while cap.isOpened(): #while camera or video is open
     diffrence = cv2.absdiff(frame0, frame1)#record diffrence in frames
     grey = cv2.cvtColor(diffrence, cv2.COLOR_BGR2GRAY)#convert diffrence in frames to black&white for motion detection
     blur = cv2.GaussianBlur(grey, (5,5), cv2.BORDER_DEFAULT) #smooth frame to reduce imprefections of camera | higher values = more blur
     _, thresh = cv2.threshold(blur, 19, 255, cv2.THRESH_BINARY)#threshold = 19, set to 255 if >= 19, set to 0 is < 19.
     dilated = cv2.dilate(thresh, None, iterations = 4)#something to do with shape of object
     
-    contor, _ = cv2.findContours(dilated, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contor, _ = cv2.findContours(dilated, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #get contours
     
-    for c in contor:
+    for c in contor: #for each contour
         #if cv2.contourArea(c) >= 10:  #use this to filter out unwanted contours
         x,y,w,h = cv2.boundingRect(c)
         forwardX = int(x + (w/2))
@@ -53,8 +56,8 @@ while cap.isOpened():
     frame0 = frame1
     ret, frame1 = cap.read()
     
-    if cv2.waitKey(40) == 27:
+    if cv2.waitKey(40) == 27: #PRESS ESCAPE TO END PROGRAM
         break
-
+#Garabage disposal#######################################
 cv2.destroyAllWindows()
 #cv2.release()
