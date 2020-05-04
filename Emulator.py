@@ -2,13 +2,13 @@ import argparse as ap
 import os.path
 
 #ADA Motor emulator
-#   X X X X X X X
-#   X X X X X X X
-#   X X X X X X X
-#   X X X O X X X
-#   X X X X X X X
-#   X X X X X X X
-#   X X X X X X X
+#   X X X | X X X
+#   X X X | X X X
+#   X X X | X X X
+#   ------0------
+#   X X X | X X X
+#   X X X | X X X
+#   X X X | X X X
 #assuming -50 to 50 X/Y movement grid starting at 0,0
 #each numbered unit represents 1 revolution with the spindal attached
 #3 motors (1: up/down, 1:left, 1:right)
