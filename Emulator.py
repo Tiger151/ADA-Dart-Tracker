@@ -12,7 +12,14 @@ import os.path
 #assuming -50 to 50 X/Y movement grid starting at 0,0
 #each numbered unit represents 1 revolution with the spindal attached
 #3 motors (1: up/down, 1:left, 1:right)
-#Motors left and right move togeather while the up/down motor is independent.
+#Motors left and right move togeather while the up/down motor is independent with gravity assisted drop.
+
+#############################################
+#ARGUMENTS:
+# argument x: the goto horizontal location in terms of -50 to 50
+# argument y: the goto vertical location in terms of -50 to 50
+# see Main.py for conversion of exit camera pixels to meters to these units
+#############################################
 
 #inital vars
 #load values from last throw(emulates previous throw position)
@@ -21,6 +28,9 @@ motorRight = 0
 motorUpDown = 0
 prevX = 0
 prevY = 0
+
+sendX, sendY = 0
+
 if (os.path.isfile("positions.csv")):
     file = open("positions.csv", "r")
     items = file.readline().split(',')
@@ -40,15 +50,18 @@ parser.add_argument('x', help="X pos to goto", type=int)
 parser.add_argument('y', help="Y pos to goto", type=int)
 args = parser.parse_args()
 
+sendX = args.x
+sendY = args.y
+
 #stop motors if x or y is greather than 50 or less than -50
-if args.y > 50:
-    args.y = 50
-if args.y < -50:
-    args.y = -50
-if args.x > 50:
-    args.x = 50
-if args.x < -50:
-    args.x = -50
+if sendY > 50:
+    sendY = 50
+if sendY < -50:
+    sendY = -50
+if sendX > 50:
+    sendX = 50
+if sendX < -50:
+    sendX = -50
 
 #used to find move ammount between the current position and the goto position for either axis
 def findMoveAmmount(currentPos, gotoPos):
@@ -77,8 +90,8 @@ def spinRight(howMuch):
     #motorLeft = -(howMuch)               #must spin oposite motor reverse when horizontal
     return;
 
-xMove = findMoveAmmount(prevX, args.x)
-yMove = findMoveAmmount(prevY, args.y)
+xMove = findMoveAmmount(prevX, sendX)
+yMove = findMoveAmmount(prevY, sendY)
 
 #y axis move
 if yMove > 0:
@@ -91,7 +104,7 @@ if xMove > 0:
 if xMove < 0:
     spinLeft(xMove)
 print("Moved X:%d Y:%d" % (xMove, yMove))
-print("POS X:%d Y:%d" % (args.x, args.y))
+print("POS X:%d Y:%d" % (sendX, sendY))
 #save current positions to file(emulates halted after throw) 
 file = open("positions.csv", "w")
 file.write(str(motorLeft))
