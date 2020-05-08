@@ -29,7 +29,8 @@ motorUpDown = 0
 prevX = 0
 prevY = 0
 
-sendX, sendY = 0
+sendX = 0
+sendY = 0
 
 if (os.path.isfile("positions.csv")):
     file = open("positions.csv", "r")
@@ -113,7 +114,7 @@ file.write(str(motorRight))
 file.write(",")
 file.write(str(motorUpDown))
 file.write(",")
-file.write(str(args.x))
+file.write(str(sendX))
 file.write(",")
-file.write(str(args.y))
+file.write(str(sendY))
 file.close()

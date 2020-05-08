@@ -253,7 +253,7 @@ class Emulator:
                 self.gx = 50
             if self.gx < -50:
                 self.gx = -50
-    
+		
     def findMoveAmmount(self, currentPos, gotoPos):
         return (-(currentPos) + gotoPos);
 
@@ -297,9 +297,9 @@ class Emulator:
         file.write(",")
         file.write(str(self.motorUpDown))
         file.write(",")
-        file.write(str(self.gx))
+        file.write(str(xMove))
         file.write(",")
-        file.write(str(self.gy))
+        file.write(str(yMove))
         file.close()
 
 #end of embedded emulator
@@ -357,5 +357,3 @@ if not isMiss: #inside ADB Y and X movement (Assuming adb can go )
     #pass data onto emulator
     emu = Emulator(sendX, sendY)
     emu.run()
-
-#also make emulator take meters
